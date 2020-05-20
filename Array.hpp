@@ -23,7 +23,6 @@ class Array {
 	void alloc();
 	void dealloc();
 
-	void sort(uintmax_t start, uintmax_t end);
 	void swap(T& a, T& b);
 
 public:
@@ -54,8 +53,6 @@ public:
 	void swap(Array<T>& other);
 
 	Array<T> splice(uintmax_t start, uintmax_t end) const;
-
-	void sort();
 
 	std::string toString() const;
 
@@ -238,60 +235,4 @@ void Array<T>::swap(T& a, T& b) {
 	T tmp = a;
 	a = b;
 	b = tmp;
-}
-
-template <class T>
-void Array<T>::sort() {
-	sort(0, m_length - 1);
-}
-
-template <class T>
-void Array<T>::sort(uintmax_t start, uintmax_t end) {
-	//end is inclusive
-	if (m_length == 0)
-		return;
-	if (start == end) //size == 1
-		return;
-	if (start == end - 1) { //size == 2
-		if (arr[start] <= arr[end])
-			return;
-		else {
-			swap(arr[start], arr[end]);
-			return;
-		}
-	}
-	//pivot
-	uintmax_t lastSwap = (end + start) / 2;
-	if (arr[start] > arr[lastSwap])
-		swap(arr[start], arr[lastSwap]);
-	if (arr[lastSwap] > arr[end])
-		swap(arr[lastSwap], arr[end]);
-	if (arr[start] > arr[lastSwap])
-		swap(arr[start], arr[lastSwap]);
-	T comp = arr[lastSwap];
-	lastSwap--;
-	uintmax_t j;
-	bool j_init = 0;
-	//sort
-	for (uintmax_t i = start; i <= end; i++) {
-		if (arr[i] >= comp) {
-			bool swapped = false;
-			if (!j_init) {
-				j = i + 1;
-				j_init = 1;
-			}
-			for (; j <= end; j++) {
-				if (arr[j] <= comp) {
-					swap(arr[i], arr[j++]);
-					lastSwap = i;
-					swapped = true;
-					break;
-				}
-			}
-			if (!swapped)
-				break;
-		}
-	}
-	sort(start, lastSwap);
-	sort(lastSwap + 1, end);
 }
